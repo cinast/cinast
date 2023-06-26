@@ -7,6 +7,9 @@
     <title>Page</title>
 
     <style>
+        body{
+            background: linear-gradient(130.56deg, rgb(8, 40, 114) 0%, rgb(2, 18, 43) 100%)
+        }
 
         .btn {
             background-color: rgba(0, 0, 0, 1);
@@ -25,11 +28,26 @@
             position: relative;
             left: 50px;
         }
+        #about * {
+            position: relative;
+        }
+
+        #about p {
+            color:white;
+        }
+
+        #email {
+            width: 120px;
+            border:2px darkslategrey;
+            border-radius: 3px;
+            background-color: grey;
+            text-align: center
+            }
 
     </style>
 </head>
 
-<body style="background: linear-gradient(130.56deg, #12327c 0%, #02122b 100%);">
+<body>
     <div id="root" style="position: fixed;top: 0;right: 0;bottom: 0;left: 0;width: 100%;height: 100%;">
         <div id="top-center-imgs" style="position: fixed;top: 20px;left: 10px;width:100%;height: 200px;;">
             <img src="./src/img/c/c.png">
@@ -41,14 +59,21 @@
             <img src="./src/img/c/r.png">
         </div>
 
-        <div id="about" style="top: 20px
-        ;">
-            <p>how do u find here()</p>
-            <h5>about me</h5>
+        <div id="about" style="top: 20px;width:80%;">
+            <p style="font-size: x-small;">how do u find here()</p>
             &#10;
-            <p></p>
-            
+            <p>here is cosider, wecome to my page</p>
+            <h4>about</h4>
+            <p>I have many names, but most used are <b>cinast</b> and <b>c*</b></p>
+            <p>cinast is my coding-name, and you can call me c* anywhere</p>
+            <div id="email">
+            <i style="font-size: smaller;">pastfor@outlook.com</i>
         </div>
+
+        <div id="">
+            <p></p>
+        </div>
+    </div>
     </div>
 </body>
 
