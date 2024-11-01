@@ -1,5 +1,1 @@
-a guy who crazy about exploring  
-with special imagines  
-and when he have to face HTMLapis  
-he gets into a mess 🌫️  
-👁️‍🗨️🌫️🔎 → 🌫️😂🌫️
+I found I so stupid that need to be imporve.
