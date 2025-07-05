@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>个人博客</title>
+        <style g="colors">
+            :root {
+                /* --background-color: ; */
+                --gold-usual: gold;
+                --gold-second: rgb(240, 197, 89);
+                --gold-light: rgb(255, 231, 94);
+
+                --gray-bright: #969696;
+                --gray-usual: #5c5c5c;
+                --gray-dark-brighter: #494949;
+                --gray-darker: #313131;
+                --blue-ink-deeper: rgb(2, 18, 43);
+
+                --font-snow: rgb(238, 238, 238);
+                --font-white-greyer: rgb(204, 204, 204);
+                --font-gary-lighter: #adadad;
+                --font-gary: #8b8b8b;
+                --font-dark-lighter: #353535;
+                --font-dark: #222222;
+
+                --Owner-who: url("./static/img/silence.svg");
+                --referer-dynamic: 0;
+            }
+        </style>
+        <style>
+            :root {
+                --size-small: 20px;
+                --size-medium: 50px;
+                --size-large: 80px;
+                --size-extra-large: 120px;
+            }
+
+            * {
+                padding: 0;
+                margin: 0;
+            }
+
+            body {
+                width: 100vw;
+                height: 100vh;
+                background: linear-gradient(130.56deg, rgb(11, 21, 44) 0%, var(--blue-ink-deeper) 100%);
+            }
+
+            @media (prefers-color-scheme: light) {
+            }
+
+            @media (prefers-color-scheme: dark) {
+            }
+        </style>
+        <style>
+            p,
+            span,
+            i,
+            u {
+                color: white;
+                font-style: normal;
+                text-align: left;
+                font-size: medium;
+                font-family: var(--font-family-usual), "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji",
+                    "Segoe UI Emoji";
+                line-height: normal;
+            }
+
+            @font-face {
+                font-family: "NotoSansCJKkr";
+                src: url("./static/font/NotoSansCJKkr-Regular.otf");
+            }
+
+            @font-face {
+                font-family: "Centaur";
+                src: url("./static/font/CENTAUR.TTF");
+                unicode-range: U+0000-007F;
+            }
+
+            @font-face {
+                font-family: "SimFang";
+                src: url("static/font/SIMFANG.TTF");
+                unicode-range: U+4E00-9FFF;
+            }
+
+            @font-face {
+                font-family: "STkaiti";
+                src: url("./static/font/STKAITI.TTF");
+                unicode-range: U+4E00-9FFF;
+            }
+
+            :root {
+                --font-family-usual: STkaiti, SimFang, Centaur, NotoSansCJKkr;
+            }
+        </style>
+        <style>
+            .btn {
+                background-color: rgba(0, 0, 0, 1);
+            }
+
+            .btn:active {
+                background-color: rgba(0, 0, 0, 0.2);
+            }
+
+            .test {
+                position: absolute;
+            }
+
+            avatar {
+                position: absolute;
+                width: 200px;
+                height: 200px;
+                border: 1px solid var(--gold-usual);
+                border-radius: 50%;
+                backdrop-filter: blur(10px);
+                box-shadow: 5px 3px 10px var(--gold-light);
+
+                background-image: var(--Owner-who);
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: contain;
+            }
+
+            website_icon {
+                width: 20px;
+                height: 20px;
+                border: var(--gold-usual) 100%;
+            }
+
+            /*
+            * special div for editing bg
+            */
+            background {
+                position: fixed;
+                left: 40vw;
+                top: 50vh;
+                width: 100vw;
+                height: 100vh;
+                z-index: -1000;
+            }
+
+            /* background > .backfill {
+                position: absolute;
+            } */
+        </style>
+        <style>
+            .area {
+                position: relative;
+
+                display: block;
+                margin: 5px #999;
+                border: 10px 0px 10px 0px;
+            }
+
+            .container {
+                position: relative;
+                display: block;
+                width: 600px;
+                height: max-content;
+            }
+
+            .line {
+                position: relative;
+                width: fit-content;
+                padding-left: 15px;
+                margin-left: 10px;
+            }
+
+            .line > * {
+                display: inline-block;
+            }
+
+            .line > h1 {
+                color: var(--gold-usual);
+                font-size: larger;
+                letter-spacing: 0.11cap;
+                font-family: var(--font-family-usual);
+                font-weight: 490;
+                /* font-style: oblique; */
+                text-align: left;
+                display: block;
+                width: 100%;
+                line-height: 90%;
+                width: fit-content;
+            }
+
+            /* underline */
+            .line > h1::before {
+                content: "";
+                display: inline-block;
+                position: absolute;
+                bottom: calc(-1 * (min(max(2px, 0.1em), 5px)));
+                background: var(--gold-second);
+                height: max(min(5px, 0.05em), 0.8px);
+                width: 0;
+                transition: width 0.36s;
+                left: 5px + max(min(5px, 0.4em), 3.5px);
+            }
+
+            .line:hover > h1::before {
+                width: calc(100% + 2ch - 5px - max(min(5px, 0.4em), 3.5px));
+            }
+
+            /* the sidedot */
+            .line::before {
+                content: "";
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                left: 5px;
+                width: max(min(5px, 0.4em), 3.5px);
+                height: max(min(5px, 0.4em), 3.5px);
+                background-color: var(--gold-light);
+                border-radius: 100%;
+                opacity: 0;
+                transition: opacity 0.8s;
+            }
+
+            .line:hover::before {
+                opacity: 1;
+            }
+
+            .content {
+                position: relative;
+                background: linear-gradient(0deg, transparent 0%, var(--blue-ink-deeper) 100%);
+                backdrop-filter: blur(10px);
+                border-style: ridge;
+                border-width: 4px 2px 2px 2px;
+                border-radius: 4px;
+
+                border-top-color: var(--gray-dark-brighter);
+                border-right-color: var(--gray-darker);
+                border-bottom-color: var(--gold-light);
+                border-left-color: var(--gray-bright);
+
+                margin: 5px 10px 5px 10px;
+                padding: 2px;
+                transition: all 0.3s ease-out;
+                z-index: 31;
+                opacity: 0.8;
+                box-shadow: 0 2px 4px rgba(255, 231, 94, 0.3);
+                transition: box-shadow filter 0.3s ease;
+            }
+
+            .content:hover {
+                background: linear-gradient(0deg, var(--gray-darker) 0%, var(--blue-ink-deeper) 100%);
+                backdrop-filter: blur(5px);
+                box-shadow: 0 4px 8px rgba(255, 231, 94, 0.5);
+                opacity: 1;
+            }
+
+            .content * {
+                z-index: 30;
+            }
+
+            .textarea {
+                width: fit-content;
+                height: fit-content;
+                background: transparent;
+                padding: 0 15px;
+            }
+
+            .textarea * {
+                position: relative;
+                left: 10px;
+                text-align: left;
+                text-wrap: balance;
+                text-align: left;
+                line-height: 1rem;
+                letter-spacing: 1px;
+                font-weight: 400;
+            }
+
+            .textarea p,
+            .textarea span,
+            .textarea i,
+            .textarea u,
+            .textarea del {
+                position: relative;
+                margin: 0.8em 0;
+                text-align: left;
+                text-wrap: pretty;
+                font-family: var(--font-family-usual);
+                line-height: 0.7;
+                letter-spacing: 0.5px;
+                font-weight: 300;
+                padding-left: 1em;
+                text-indent: -1em;
+            }
+
+            .textarea p:first-child {
+                margin-top: 0;
+            }
+
+            .textarea p:last-child {
+                margin-bottom: 0;
+            }
+        </style>
+        <style>
+            .block {
+                position: relative;
+                width: auto;
+            }
+
+            .blockS {
+                height: var(--size-small, 20px);
+            }
+            .blockM {
+                height: var(--size-medium, 50px);
+            }
+            .blockL {
+                height: var(--size-large, 80px);
+            }
+            .blockXl {
+                height: var(--size-extra-large, 120px);
+            }
+        </style>
+        <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+    </head>
+
+    <body>
+        <header></header>
+
+        <div id="pre">
+            <div class="block blockL"></div>
+            <div class="line"><h1>世界施工中.ing...</h1></div>
+        </div>
+        <div id="headline" class="area">
+            <div class="block blockL"></div>
+
+            <div class="container">
+                <div class="line">
+                    <h1>关于我？</h1>
+                </div>
+                <div class="content">
+                    <div class="block blockS"></div>
+                    <div class="textarea">
+                        <p>学了三四年代码的新手</p>
+                        <p>不喜欢在轮子上面再造轮子</p>
+                        <p>永远记不清了MDN到底说了什么</p>
+                    </div>
+                    <div class="block blockS"></div>
+                </div>
+            </div>
+        </div>
+        <div id="main" class="area">
+            <div class="blockM"></div>
+
+            <div class="container">
+                <div class="line">
+                    <h1>一直所想的是……</h1>
+                </div>
+                <div class="content">
+                    <div class="block blockS"></div>
+                    <div class="textarea">
+                        <p>人类好蠢</p>
+                        <p>我也好蠢……</p>
+                        <p>世界也好蠢…………</p>
+                        <div class="block blockS"></div>
+                        <p>代码还是再等标准好用一点再来……</p>
+                        <p>Ai太蠢，可是帮我写了太多……</p>
+                    </div>
+                    <div class="block blockS"></div>
+                </div>
+            </div>
+            <div class="blockS"></div>
+            <div class="container">
+                <div class="line">
+                    <h1>不做栏 / never not not not to do</h1>
+                </div>
+                <div class="content">
+                    <div class="block blockS"></div>
+                    <div class="textarea">
+                        <p>一定会写完这个页面</p>
+                        <p>一定会成为大佬</p>
+                        <p>一定会让代码成为一种语言表达</p>
+                    </div>
+                    <div class="block blockS"></div>
+                </div>
+            </div>
+        </div>
+        <div class="block blockM"></div>
+        <footer>
+            <div class="area">
+                <div class="container">
+                    <div class="line">
+                        <h1>联系我 / Connections</h1>
+                    </div>
+                    <div class="content">
+                        <div class="block blockS"></div>
+                        <div class="textarea">
+                            <p>email: pastfor@outlook.com</p>
+                            <p>GitHub: github.com/Cinast</p>
+                        </div>
+                        <div class="block blockS"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="block blockXl"></div>
+            <div class="block blockXl"></div>
+            <div class="block blockXl"></div>
+            <div class="block blockXl"></div>
+            <div class="block blockXl"></div>
+        </footer>
+        <background>
+            <avatar></avatar>
+        </background>
+
+        <p>什么？你想要彩蛋？</p>
+        <i>但是我知道宋体yyds~</i>
+
+        <!-- <script src="./static/CSSValueReferer.js"></script> -->
+        <!-- 该死，这东西花了我两块钱，却做成了石山 -->
+    </body>
+</html>
