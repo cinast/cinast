@@ -4,9 +4,10 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>个人博客</title>
+
         <style g="colors">
+            /* global vars */
             :root {
-                /* --background-color: ; */
                 --gold-usual: gold;
                 --gold-second: rgb(240, 197, 89);
                 --gold-light: rgb(255, 231, 94);
@@ -27,15 +28,16 @@
                 --Owner-who: url("./static/img/silence.svg");
                 --referer-dynamic: 0;
             }
-        </style>
-        <style>
+            /* sizes vars */
             :root {
                 --size-small: 20px;
                 --size-medium: 50px;
                 --size-large: 80px;
                 --size-extra-large: 120px;
             }
-
+        </style>
+        <style>
+            /* default setting */
             * {
                 padding: 0;
                 margin: 0;
@@ -47,6 +49,7 @@
                 background: linear-gradient(130.56deg, rgb(11, 21, 44) 0%, var(--blue-ink-deeper) 100%);
             }
 
+            /* UI general style setting */
             @media (prefers-color-scheme: light) {
             }
 
@@ -54,6 +57,7 @@
             }
         </style>
         <style>
+            /* fonts initialize */
             p,
             span,
             i,
@@ -95,18 +99,7 @@
             }
         </style>
         <style>
-            .btn {
-                background-color: rgba(0, 0, 0, 1);
-            }
-
-            .btn:active {
-                background-color: rgba(0, 0, 0, 0.2);
-            }
-
-            .test {
-                position: absolute;
-            }
-
+            /* style for functions */
             avatar {
                 position: absolute;
                 width: 200px;
@@ -158,6 +151,19 @@
                 backdrop-filter: blur(10px);
                 background-color: rgba(2, 18, 43, 0.3);
                 margin-bottom: 20px;
+                transition: all 1s cubic-bezier(0.25, 0.8, 0.25, 1);
+                cursor: pointer;
+                outline: none;
+                overflow: hidden;
+            }
+
+            pendant > button:hover,
+            pendant > button:focus-visible {
+                box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            }
+
+            pendant > button:active {
+                transform: rotateY(180deg);
             }
 
             pendant > button:last-child {
@@ -172,11 +178,9 @@
                 height: 100%;
                 background-color: var(--gold-second);
             }
-            /* background > .backfill {
-                position: absolute;
-            } */
         </style>
         <style>
+            /* main text blocks & its construction */
             .area {
                 position: relative;
 
@@ -209,7 +213,6 @@
                 letter-spacing: 0.11cap;
                 font-family: var(--font-family-usual);
                 font-weight: 490;
-                /* font-style: oblique; */
                 text-align: left;
                 display: block;
                 width: 100%;
@@ -217,7 +220,7 @@
                 width: fit-content;
             }
 
-            /* underline */
+            /* the  underline */
             .line > h1::before {
                 content: "";
                 display: inline-block;
@@ -249,7 +252,8 @@
                 transition: opacity 0.8s;
             }
 
-            .line:hover::before {
+            .line:hover::before,
+            .line:focus-visible::before {
                 opacity: 1;
             }
 
@@ -331,6 +335,7 @@
             }
         </style>
         <style>
+            /* useful blank blocks */
             .block {
                 position: relative;
                 width: auto;
