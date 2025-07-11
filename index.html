@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>个人博客</title>
-
+        <title>blog::Cinast</title>
+        <script src="./static/scripts/languages.js"></script>
         <style g="colors">
             /* global vars */
             :root {
@@ -178,6 +178,36 @@
                 height: 100%;
                 background-color: var(--gold-second);
             }
+
+            pendant > #to-top {
+                background-image: url(./static/img/content.svg);
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: 40%;
+            }
+
+            /* .tipper:before {
+                visibility: hidden;
+                position: absolute;
+                left: -20px;
+                display: block;
+                content: attr(data-tip);
+                font-size: 12px;
+                background: #e6e6e6;
+                margin-top: 32px;
+                padding: 8px 4px;
+                width: 120px;
+                border-radius: 6px;
+                z-index: 99;
+                text-align: center;
+                color: #000;
+                transition: visibility 0.25s, transform 0.25s;
+                border: 1px solid #409eff;
+            }
+
+            .tipper:hover:before {
+                visibility: visible;
+            } */
         </style>
         <style>
             /* main text blocks & its construction */
@@ -362,10 +392,9 @@
 
         <pendant>
             <div id="rope"></div>
-            <button id="to-top"></button>
+            <button id="to-top" class="tipper" data-tip="to-top"></button>
             <button id="tlang"></button>
         </pendant>
-
         <div id="pre">
             <div class="block blockL"></div>
             <div class="line"><h1>世界施工中.ing...</h1></div>
@@ -383,6 +412,7 @@
                         <p>学了三四年代码的新手</p>
                         <p>不喜欢在轮子上面再造轮子</p>
                         <p>永远记不清了MDN到底说了什么</p>
+                        <p data-translation-key="test"></p>
                     </div>
                     <div class="block blockS"></div>
                 </div>
