@@ -135,7 +135,7 @@
 
             pendant {
                 z-index: 600;
-                position: absolute;
+                position: fixed;
                 right: 50px;
                 height: auto;
                 padding-top: 150px;
@@ -277,6 +277,7 @@
                 display: block;
                 width: 600px;
                 height: max-content;
+                padding-left: 5px;
             }
 
             .line {
@@ -443,10 +444,11 @@
     <body>
         <pendant>
             <div id="rope"></div>
-            <button id="to-top" data-tip="to-top"></button>
-            <button id="lang" data-tip="languages"></button>
+            <button id="to-top" data-tip="to-top" data-tooltip-position="left"></button>
+            <button id="lang" data-tip="languages" data-tooltip-position="left" onclick="toggleLanguage()"></button>
         </pendant>
         <tooltip id="globalTooltip"></tooltip>
+
         <header></header>
 
         <div id="pre">
@@ -535,12 +537,36 @@
         </background>
 
         <p>什么？你想要彩蛋？</p>
-        <i>但是我知道宋体yyds~</i>
+        <i
+            >但是我知道宋体
+            <span data-translation-key="yyds">yyds</span>
+            ~</i
+        >
 
         <!-- <script src="./static/CSSValueReferer.js"></script> -->
         <!-- 该死，这东西花了我两块钱，却做成了石山 -->
     </body>
+    <!-- language script -->
     <script>
+        async function toggleLanguage() {
+            const langBtn = document.getElementById("lang");
+            const currentLang = document.head.lang || document.documentElement.lang;
+            const isCN = currentLang.includes("zh");
+
+            try {
+                const newLang = isCN ? "En" : "zh-CN";
+                await switchLang(newLang);
+                langBtn.style.backgroundImage = `url(./static/img/${
+                    newLang === "En" ? "lang-en.svg" : Math.random() > 0.5 ? "lang-Cn-yu-2.svg" : "lang-Cn-yu-1.png"
+                })`;
+            } catch (error) {
+                console.error("语言切换失败:", error);
+            }
+        }
+    </script>
+    <!-- tooltip script -->
+    <script>
+        " use strick ";
         const tooltip = document.getElementById("globalTooltip");
         let hideTimeout = null;
         let currentTarget = null;
@@ -548,6 +574,42 @@
         // 智能判断最佳显示位置
         function calculateBestPosition(target, tipWidth, tipHeight) {
             const targetRect = target.getBoundingClientRect();
+            const manualPos = target.getAttribute("data-tooltip-position");
+
+            if (manualPos && ["top", "bottom", "left", "right"].includes(manualPos)) {
+                // 计算位置逻辑
+                let left, top;
+                switch (manualPos) {
+                    case "top":
+                        left = targetRect.left + targetRect.width / 2 - tipWidth / 2;
+                        top = targetRect.top - tipHeight;
+                        break;
+                    case "bottom":
+                        left = targetRect.left + targetRect.width / 2 - tipWidth / 2;
+                        top = targetRect.bottom;
+                        break;
+                    case "left":
+                        left = targetRect.left - tipWidth;
+                        top = targetRect.top + targetRect.height / 2 - tipHeight / 2;
+                        break;
+                    case "right":
+                        left = targetRect.right;
+                        top = targetRect.top + targetRect.height / 2 - tipHeight / 2;
+                        break;
+                }
+                return {
+                    name: manualPos,
+                    left: Math.max(10, Math.min(left, window.innerWidth - tipWidth - 10)),
+                    top: Math.max(10, Math.min(top, window.innerHeight - tipHeight - 10)),
+                };
+            }
+            if (manualPos && ["top", "bottom", "left", "right"].includes(manualPos)) {
+                return {
+                    name: manualPos,
+                    left: targetRect.left + targetRect.width / 2 - tipWidth / 2,
+                    top: targetRect.top + targetRect.height / 2 - tipHeight / 2,
+                };
+            }
             const viewportWidth = window.innerWidth;
             const viewportHeight = window.innerHeight;
 
@@ -593,8 +655,7 @@
             // 调整位置确保不超出视口
             bestPosition.left = Math.max(10, Math.min(bestPosition.left, viewportWidth - tipWidth - 10));
             bestPosition.top = Math.max(10, Math.min(bestPosition.top, viewportHeight - tipHeight - 10));
-
-            return bestPosition;
+            console.log(bestPosition);
         }
 
         // 显示 Tooltip
@@ -619,7 +680,7 @@
             // 应用位置
             tooltip.style.left = `${bestPosition.left}px`;
             tooltip.style.top = `${bestPosition.top}px`;
-            tooltip.setAttribute("data-position", bestPosition.name);
+            tooltip.setAttribute("data-tooltip-position", bestPosition.name);
 
             // 真正显示
             tooltip.style.visibility = "visible";

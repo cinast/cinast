@@ -7,6 +7,7 @@
     "identifier": "uuid",
     "description": "",
     "translationBook": {
-        "translationKeys": "translation or original text"
+        "test": "english",
+        "yyds": "is my god forever"
     }
 }
