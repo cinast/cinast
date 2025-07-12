@@ -60,8 +60,14 @@ let LanguageFiles = {};
  */
 let currentLangFile = () => LanguageFiles[currentLang()];
 
-// Load all language files
-Languages.forEach(async (lang) => requestLangFile(lang));
+// 预加载所有语言文件
+document.addEventListener("DOMContentLoaded", () => {
+    Languages.forEach((lang) => {
+        if (lang !== "[TranslationTemplate]") {
+            requestLangFile(lang);
+        }
+    });
+});
 
 /**
  * request lang file
@@ -107,15 +113,24 @@ function updateUITranslations() {
     const langFile = currentLangFile();
     if (!langFile) return;
 
+    // 更新翻译元素并添加渐隐渐现效果
     document.querySelectorAll("[data-translation-key]").forEach((element) => {
         const key = element.getAttribute("data-translation-key");
         if (!key) return;
 
+        // 添加动画效果
+        element.style.transition = "opacity 0.3s ease";
+        element.style.opacity = "0";
+
         const translation = langFile.translationBook[key];
         if (translation) {
-            element.textContent = translation;
+            setTimeout(() => {
+                element.textContent = translation;
+                element.style.opacity = "1";
+            }, 300);
         } else {
             console.warn(`Missing translation for key: ${key}`);
+            element.style.opacity = "1";
         }
     });
 }
