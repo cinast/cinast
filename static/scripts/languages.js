@@ -20,12 +20,13 @@ function download(blob, fileName = "") {
  * Supported languages in the application
  * @type {ReadonlyArray<string>}
  */
-const LangFilesAt = Object.freeze(
-    {
-        dev: "http://127.0.0.1:3000/github v1/static/lang",
-        web: "https://github.com/cinast/cinast/blob/fc868c03f4872758c5e697baa41a7d11cbb4418c/static/lang",
-    }[["dev", "web"][document.location.origin == "https://cinast.github.io" ? 1 : 0]]
-);
+// const LangFilesAt = Object.freeze(
+//     {
+//         dev: "http://127.0.0.1:3000/github v1/static/lang",
+//         web: "https://github.com/cinast/cinast/blob/fc868c03f4872758c5e697baa41a7d11cbb4418c/static/lang",
+//     }[["dev", "web"][document.location.origin == "https://cinast.github.io" ? 1 : 0]]
+// );
+const LangFilesAt = Object.freeze("./static/lang");
 
 /**
  * Supported languages in the application
