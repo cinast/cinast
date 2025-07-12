@@ -7,7 +7,7 @@
     "identifier": "uuid",
     "description": "Chinglish（迫真）",
     "translationBook": {
-        "building.ing": "This world is in build-ing...",
+        "building.ing": "*This world is in build-ing...",
         "p1-title": "About me?",
         "p1:1": "A new hand of code for three or four years",
         "p1:2": "—who doesn't like ploy- and ploy-made",
