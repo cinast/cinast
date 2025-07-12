@@ -7,7 +7,6 @@ function pseudoUUID() {
 }
 function download(blob, fileName = "") {
     const url = URL.createObjectURL(blob);
-
     const a = document.createElement("a");
     a.href = url;
     a.download = fileName;
@@ -16,6 +15,7 @@ function download(blob, fileName = "") {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 }
+
 /**
  * Supported languages in the application
  * @type {ReadonlyArray<string>}
@@ -42,7 +42,8 @@ let currentLang = () => document.head.lang || navigator.language;
 /**
  * Object storing all loaded language files
  * @type {Object.<string, {
- *   lang: string[],
+ *   lang: string,
+ *   alliance: string[]
  *   author: string,
  *   date: string,
  *   version: string,
@@ -60,24 +61,44 @@ let LanguageFiles = {};
 let currentLangFile = () => LanguageFiles[currentLang()];
 
 // Load all language files
-Languages.forEach((lang) => {
-    if (lang === "[TranslationTemplate]") return; // Skip the translation keys placeholder
+Languages.forEach(async (lang) => requestLangFile(lang));
 
-    let request = fetch(`${LangFilesAt}/${lang}.json`);
-    request.catch((reason) => {
-        console.error(`Language loading failed for ${lang}:`, reason);
-    });
-    request.then(async (response) => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        LanguageFiles[lang] = await response.json();
-        // Update UI if this is the current language
-        if (lang === currentLang()) {
-            updateUITranslations();
-        }
-    });
-});
+/**
+ * request lang file
+ * @param lang which lang type have recorded in
+ * @returns u can get it from `LanguageFiles[lang]`
+ */
+function requestLangFile(lang) {
+    if (lang === "[TranslationTemplate]") return Promise.resolve(); // 跳过模板
+
+    return fetch(`${LangFilesAt}/${lang}.json`)
+        .then((response) => {
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            return response.json();
+        })
+        .then((langData) => {
+            LanguageFiles[lang] = langData;
+            // 如果当前语言是刚加载的语言，立即更新 UI
+            if (currentLang() === lang) updateUITranslations();
+        })
+        .catch((error) => console.error(`Language loading failed for ${lang}:`, error));
+}
+
+/**
+ * Switches the application language
+ * @param {string} lang - The language to switch to (must be one of the Languages)
+ * @returns {Promise<void>}
+ */
+async function switchLang(lang) {
+    if (lang === currentLang()) return; // 已经是当前语言，不切换
+    if (!Languages.includes(lang)) return console.error(`Language ${lang} is not supported`);
+
+    // 如果语言未加载，等待加载完成
+    if (!LanguageFiles[lang]) await requestLangFile(lang);
+
+    document.head.lang = lang;
+    updateUITranslations(); // 更新 UI
+}
 
 /**
  * Updates all elements with translation keys to the current language
@@ -100,36 +121,6 @@ function updateUITranslations() {
 }
 
 /**
- * Switches the application language
- * @param {string} lang - The language to switch to (must be one of the Languages)
- * @returns {Promise<void>}
- */
-async function switchLang(lang) {
-    if (lang === currentLang()) return;
-    if (!Languages.includes(lang)) {
-        console.error(`Language ${lang} is not supported`);
-        return;
-    }
-
-    // Wait for the language file to load if it hasn't already
-    if (!LanguageFiles[lang]) {
-        try {
-            const response = await fetch(`${LangFilesAt}/${lang}.json`);
-            LanguageFiles[lang] = await response.json();
-        } catch (error) {
-            console.error(`Failed to load language ${lang}:`, error);
-            return;
-        }
-    }
-
-    document.head.lang = lang;
-    updateUITranslations();
-
-    // Optional: Dispatch event for other parts of the app to react to language changes
-    document.dispatchEvent(new CustomEvent("languageChanged", { detail: lang }));
-}
-
-/**
  * Generating **signal** translation template as a `LanguageFile` Object
  * @param {string[]} languages - Array of language codes to include in the template
  * @returns {Object.<string, Object>} Translation JSON template
@@ -147,7 +138,8 @@ function generateTranslationTemplate(languages = ["[TranslationTemplate]"]) {
 
     //initialize the template
     const template = {
-        lang: languages,
+        lang: languages[0] || "[TranslationTemplate]",
+        alliance: ["TranslationTemplate"],
         author: `generated from ${document.location.href}`,
         date: new Date().toISOString().split("T")[0],
         version: `generated - ${new Date().toISOString().split("T")[0]}`,
@@ -172,7 +164,6 @@ function generateTranslationTemplate(languages = ["[TranslationTemplate]"]) {
 function downloadTranslationTemplate(fileName, data) {
     const jsonStr = JSON.stringify(data, null, 2);
     const blob = new Blob([jsonStr], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
     download(blob, fileName);
 }
 
@@ -180,17 +171,18 @@ function downloadTranslationTemplate(fileName, data) {
  * Download the *Translation Template* was loaded and that you want
  * @param {string[]} lang
  */
-function get_TranslationTemplate_From_Loaded(lang = ["[TranslationTemplate]"]) {
-    const template = generateTranslationTemplate(lang);
+function get_TranslationTemplate_From_Loaded(lang = "[TranslationTemplate]") {
+    const template = LanguageFiles[lang];
     downloadTranslationTemplate(`${lang}_translations.json`, template);
 }
 
 // Initialize with user's preferred language or default
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const preferredLang = currentLang();
     const supportedLang = Languages.find((lang) => lang === preferredLang || lang.startsWith(preferredLang.split("-")[0]));
 
-    if (supportedLang && supportedLang !== currentLang()) {
-        switchLang(supportedLang).catch(console.error);
-    }
+    // 默认加载第一个支持的语言（如果 preferredLang 不支持）
+    const langToLoad = supportedLang || (Languages[0] !== "[TranslationTemplate]" ? Languages[0] : Languages[1]);
+
+    if (langToLoad) await switchLang(langToLoad);
 });
