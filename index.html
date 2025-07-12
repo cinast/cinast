@@ -79,12 +79,12 @@
             @font-face {
                 font-family: "Centaur";
                 src: url("./static/font/CENTAUR.TTF");
-                unicode-range: U+0000-007F;
+                unicode-range: U+0000-007F, U+0100-017F, U+2000-206F;
             }
 
             @font-face {
                 font-family: "SimFang";
-                src: url("static/font/SIMFANG.TTF");
+                src: url("./static/font/SIMFANG.TTF");
                 unicode-range: U+4E00-9FFF;
             }
 
@@ -193,28 +193,74 @@
                 background-size: 65%;
             }
 
-            /* .tipper:before {
-                visibility: hidden;
-                position: absolute;
-                left: -20px;
+            tooltip {
+                position: fixed;
                 display: block;
-                content: attr(data-tip);
-                font-size: 12px;
-                background: #e6e6e6;
-                margin-top: 32px;
-                padding: 8px 4px;
-                width: 120px;
-                border-radius: 6px;
-                z-index: 99;
-                text-align: center;
-                color: #000;
-                transition: visibility 0.25s, transform 0.25s;
-                border: 1px solid #409eff;
+                z-index: 9999;
+                max-width: 300px;
+                padding: 6px 10px;
+                /* background: linear-gradient(to bottom, var(--blue-ink-deeper) 0%, transparent 100%); */
+                color: whitesmoke;
+                border-radius: 2.5px;
+                border-bottom: 1px solid var(--gold-usual);
+                box-shadow: 0 2px 8px rgba(255, 200, 61, 0.7);
+                backdrop-filter: blur(10px);
+                opacity: 0;
+                font-size: 14px;
+                line-height: 1;
+                font-family: var(--font-family-usual);
+                transition: opacity 0.2s ease;
+                line-height: 1rem;
+                letter-spacing: 0.6px;
+
+                transition: opacity 0.2s ease;
+                pointer-events: none;
             }
 
-            .tipper:hover:before {
-                visibility: visible;
-            } */
+            /* Tooltip 箭头 */
+            tooltip::after {
+                content: "";
+                position: absolute;
+                width: 0;
+                height: 0;
+                border: 6px solid transparent;
+            }
+
+            tooltip[data-position="top"]::after {
+                bottom: -12px;
+                left: 50%;
+                transform: translateX(-50%);
+                border-top-color: #333;
+                border-bottom: none;
+            }
+
+            tooltip[data-position="bottom"]::after {
+                top: -12px;
+                left: 50%;
+                transform: translateX(-50%);
+                border-bottom-color: #333;
+                border-top: none;
+            }
+
+            tooltip[data-position="left"]::after {
+                right: -12px;
+                top: 50%;
+                transform: translateY(-50%);
+                border-left-color: #333;
+                border-right: none;
+            }
+
+            tooltip[data-position="right"]::after {
+                left: -12px;
+                top: 50%;
+                transform: translateY(-50%);
+                border-right-color: #333;
+                border-left: none;
+            }
+
+            tooltip[data-show="true"] {
+                opacity: 1;
+            }
         </style>
         <style>
             /* main text blocks & its construction */
@@ -395,20 +441,20 @@
     </head>
 
     <body>
-        <header></header>
-
         <pendant>
             <div id="rope"></div>
-            <button id="to-top" class="tipper" data-tip="to-top"></button>
-            <button id="lang"></button>
+            <button id="to-top" data-tip="to-top"></button>
+            <button id="lang" data-tip="languages"></button>
         </pendant>
+        <tooltip id="globalTooltip"></tooltip>
+        <header></header>
+
         <div id="pre">
             <div class="block blockL"></div>
             <div class="line"><h1>世界施工中.ing...</h1></div>
         </div>
         <div id="headline" class="area">
             <div class="block blockL"></div>
-
             <div class="container">
                 <div class="line">
                     <h1>关于我？</h1>
@@ -494,4 +540,126 @@
         <!-- <script src="./static/CSSValueReferer.js"></script> -->
         <!-- 该死，这东西花了我两块钱，却做成了石山 -->
     </body>
+    <script>
+        const tooltip = document.getElementById("globalTooltip");
+        let hideTimeout = null;
+        let currentTarget = null;
+
+        // 智能判断最佳显示位置
+        function calculateBestPosition(target, tipWidth, tipHeight) {
+            const targetRect = target.getBoundingClientRect();
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+
+            // 可用空间计算
+            const space = {
+                top: targetRect.top,
+                bottom: viewportHeight - targetRect.bottom,
+                left: targetRect.left,
+                right: viewportWidth - targetRect.right,
+            };
+
+            // 默认优先顺序: bottom -> top -> right -> left
+            const positions = [
+                {
+                    name: "bottom",
+                    possible: space.bottom >= tipHeight,
+                    left: targetRect.left + targetRect.width / 2 - tipWidth / 2,
+                    top: targetRect.bottom,
+                },
+                {
+                    name: "top",
+                    possible: space.top >= tipHeight,
+                    left: targetRect.left + targetRect.width / 2 - tipWidth / 2,
+                    top: targetRect.top - tipHeight,
+                },
+                {
+                    name: "right",
+                    possible: space.right >= tipWidth,
+                    left: targetRect.right,
+                    top: targetRect.top + targetRect.height / 2 - tipHeight / 2,
+                },
+                {
+                    name: "left",
+                    possible: space.left >= tipWidth,
+                    left: targetRect.left - tipWidth,
+                    top: targetRect.top + targetRect.height / 2 - tipHeight / 2,
+                },
+            ];
+
+            // 找到第一个可行的位置
+            const bestPosition = positions.find((pos) => pos.possible) || positions[0];
+
+            // 调整位置确保不超出视口
+            bestPosition.left = Math.max(10, Math.min(bestPosition.left, viewportWidth - tipWidth - 10));
+            bestPosition.top = Math.max(10, Math.min(bestPosition.top, viewportHeight - tipHeight - 10));
+
+            return bestPosition;
+        }
+
+        // 显示 Tooltip
+        function showTooltip(target) {
+            // 清除之前的隐藏计时
+            clearTimeout(hideTimeout);
+
+            // 设置内容
+            const tipContent = target.getAttribute("data-tip");
+            tooltip.textContent = tipContent;
+
+            // 先显示一次以获取尺寸
+            tooltip.setAttribute("data-show", "true");
+            tooltip.style.visibility = "hidden";
+            tooltip.style.display = "block";
+
+            // 计算最佳位置
+            const tipWidth = tooltip.offsetWidth;
+            const tipHeight = tooltip.offsetHeight;
+            const bestPosition = calculateBestPosition(target, tipWidth, tipHeight);
+
+            // 应用位置
+            tooltip.style.left = `${bestPosition.left}px`;
+            tooltip.style.top = `${bestPosition.top}px`;
+            tooltip.setAttribute("data-position", bestPosition.name);
+
+            // 真正显示
+            tooltip.style.visibility = "visible";
+            currentTarget = target;
+        }
+
+        // 隐藏 Tooltip (带延迟)
+        function hideTooltip() {
+            hideTimeout = setTimeout(() => {
+                tooltip.setAttribute("data-show", "false");
+                currentTarget = null;
+            }, 2000);
+        }
+
+        // 取消隐藏
+        function cancelHide() {
+            clearTimeout(hideTimeout);
+        }
+
+        // 事件监听
+        document.addEventListener("mouseover", (e) => {
+            const target = e.target.closest("[data-tip]");
+            if (target) {
+                showTooltip(target);
+            } else if (e.target === tooltip) {
+                cancelHide();
+            } else if (currentTarget && !currentTarget.contains(e.target) && e.target !== tooltip) {
+                hideTooltip();
+            }
+        });
+
+        // Tooltip 鼠标事件
+        tooltip.addEventListener("mouseenter", cancelHide);
+        tooltip.addEventListener("mouseleave", hideTooltip);
+
+        // 窗口大小变化时重新定位
+        window.addEventListener("resize", () => {
+            if (currentTarget) {
+                showTooltip(currentTarget);
+            }
+        });
+    </script>
 </html>
