@@ -184,6 +184,12 @@
                 background-repeat: no-repeat;
                 background-position: center;
                 background-size: 40%;
+                opacity: 0.3;
+                transition: opacity 0.4s ease;
+            }
+
+            pendant > #to-top.active {
+                opacity: 1;
             }
 
             pendant > #lang {
@@ -722,5 +728,52 @@
                 showTooltip(currentTarget);
             }
         });
+    </script>
+    <!-- back to top script -->
+    <script>
+        const toTopBtn = document.getElementById("to-top");
+
+        function smoothScrollToTop() {
+            const duration = 3000; // 最大3秒
+            const start = window.pageYOffset;
+            const startTime = performance.now();
+
+            function scrollStep(timestamp) {
+                const currentTime = timestamp - startTime;
+                const progress = Math.min(currentTime / duration, 1);
+
+                const easing = easeInOutCubic(progress);
+
+                window.scrollTo(0, start * (1 - easing));
+
+                if (progress < 1) {
+                    requestAnimationFrame(scrollStep);
+                }
+            }
+
+            function easeInOutCubic(t) {
+                return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+            }
+
+            requestAnimationFrame(scrollStep);
+        }
+
+        // 按钮变暗/变亮
+        window.addEventListener("scroll", () => {
+            if (window.scrollY > 300) {
+                toTopBtn.classList.add("active");
+            } else {
+                toTopBtn.classList.remove("active");
+            }
+        });
+
+        // 点击滚动到顶部
+        toTopBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            smoothScrollToTop();
+        });
+
+        // 初始状态
+        toTopBtn.classList.remove("active");
     </script>
 </html>
