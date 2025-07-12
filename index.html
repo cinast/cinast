@@ -35,6 +35,12 @@
                 --size-large: 80px;
                 --size-extra-large: 120px;
             }
+
+            /** math values */
+            :root {
+                --sqrt-2: 1.4142135623730950488016887242097;
+                --math-e: 2.7182818284590452353602874713527;
+            }
         </style>
         <style>
             /* default setting */
@@ -54,6 +60,10 @@
             }
 
             @media (prefers-color-scheme: dark) {
+            }
+
+            :root {
+                font-family: var(--font-family-usual);
             }
         </style>
         <style>
@@ -203,65 +213,47 @@
                 position: fixed;
                 display: block;
                 z-index: 9999;
+
                 max-width: 300px;
+                margin: 10px;
                 padding: 6px 10px;
-                /* background: linear-gradient(to bottom, var(--blue-ink-deeper) 0%, transparent 100%); */
-                color: whitesmoke;
                 border-radius: 2.5px;
                 border-bottom: 1px solid var(--gold-usual);
                 box-shadow: 0 2px 8px rgba(255, 200, 61, 0.7);
                 backdrop-filter: blur(10px);
                 opacity: 0;
+
                 font-size: 14px;
-                line-height: 1;
-                font-family: var(--font-family-usual);
-                transition: opacity 0.2s ease;
                 line-height: 1rem;
+                font-family: var(--font-family-usual);
+                color: whitesmoke;
                 letter-spacing: 0.6px;
 
                 transition: opacity 0.2s ease;
                 pointer-events: none;
             }
 
-            /* Tooltip 箭头 */
+            /* Tooltip箭头 */
             tooltip::after {
                 content: "";
                 position: absolute;
-                width: 0;
-                height: 0;
-                border: 6px solid transparent;
-            }
-
-            tooltip[data-position="top"]::after {
-                bottom: -12px;
-                left: 50%;
-                transform: translateX(-50%);
-                border-top-color: #333;
-                border-bottom: none;
-            }
-
-            tooltip[data-position="bottom"]::after {
-                top: -12px;
-                left: 50%;
-                transform: translateX(-50%);
-                border-bottom-color: #333;
-                border-top: none;
-            }
-
-            tooltip[data-position="left"]::after {
-                right: -12px;
-                top: 50%;
-                transform: translateY(-50%);
-                border-left-color: #333;
-                border-right: none;
-            }
-
-            tooltip[data-position="right"]::after {
-                left: -12px;
-                top: 50%;
-                transform: translateY(-50%);
-                border-right-color: #333;
+                --size: calc(max(min(10px, 2%), 3.5px));
+                width: var(--size);
+                height: var(--size);
+                background-color: var(--gold-light);
                 border-left: none;
+                border-bottom: none;
+                border: 1px solid var(--gold-usual);
+                opacity: 0;
+                rotate: 45deg;
+                transition: opacity 0.2s ease;
+                left: calc(var(--dot-towards) - max(var(--size) * var(--sqrt-2)));
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+            tooltip[data-show="true"]::after {
+                opacity: 1;
             }
 
             tooltip[data-show="true"] {
@@ -332,10 +324,11 @@
                 content: "";
                 position: absolute;
                 top: 50%;
-                transform: translateY(-50%);
                 left: 5px;
-                width: max(min(5px, 0.4em), 3.5px);
-                height: max(min(5px, 0.4em), 3.5px);
+                transform: translateY(-50%);
+                --size: max(min(5px, 0.4em), 3.5px);
+                width: var(--size);
+                height: var(--size);
                 background-color: var(--gold-light);
                 border-radius: 100%;
                 opacity: 0;
@@ -459,21 +452,22 @@
 
         <div id="pre">
             <div class="block blockL"></div>
-            <div class="line"><h1>世界施工中.ing...</h1></div>
+            <div class="line">
+                <h1 data-tip="一天更100行代码&#13;——鬼才信" data-translation-key="building.ing">世界施工中.ing...</h1>
+            </div>
         </div>
         <div id="headline" class="area">
             <div class="block blockL"></div>
             <div class="container">
                 <div class="line">
-                    <h1>关于我？</h1>
+                    <h1 data-translation-key="p1-title">关于我？</h1>
                 </div>
                 <div class="content">
                     <div class="block blockS"></div>
                     <div class="textarea">
-                        <p>学了三四年代码的新手</p>
-                        <p>不喜欢在轮子上面再造轮子</p>
-                        <p>永远记不清了MDN到底说了什么</p>
-                        <p data-translation-key="test"></p>
+                        <p data-translation-key="p1:1">学了三四年代码的新手</p>
+                        <p data-translation-key="p1:2">不喜欢在轮子上面再造轮子</p>
+                        <p data-translation-key="p1:3">永远记不清了MDN到底说了什么</p>
                     </div>
                     <div class="block blockS"></div>
                 </div>
@@ -484,17 +478,17 @@
 
             <div class="container">
                 <div class="line">
-                    <h1>一直所想的是……</h1>
+                    <h1 data-translation-key="p2-title">一直所想的是……</h1>
                 </div>
                 <div class="content">
                     <div class="block blockS"></div>
                     <div class="textarea">
-                        <p>人类好蠢</p>
-                        <p>我也好蠢……</p>
-                        <p>世界也好蠢…………</p>
+                        <p data-translation-key="p2:1">人类好蠢</p>
+                        <p data-translation-key="p2:2">我也好蠢……</p>
+                        <p data-translation-key="p2:3">世界也好蠢…………</p>
                         <div class="block blockS"></div>
-                        <p>代码还是再等标准好用一点再来……</p>
-                        <p>Ai太蠢，可是帮我写了太多……</p>
+                        <p data-translation-key="p2:4">代码还是再等标准好用一点再来……</p>
+                        <p data-translation-key="p2:5">Ai太蠢，可是帮我写了太多……</p>
                     </div>
                     <div class="block blockS"></div>
                 </div>
@@ -502,14 +496,15 @@
             <div class="blockS"></div>
             <div class="container">
                 <div class="line">
-                    <h1>不做栏 / never not not not to do</h1>
+                    <h1 data-translation-key="p3-title">不做栏</h1>
                 </div>
+                never not not not to do
                 <div class="content">
                     <div class="block blockS"></div>
                     <div class="textarea">
-                        <p>一定会写完这个页面</p>
-                        <p>一定会成为大佬</p>
-                        <p>一定会让代码成为一种语言表达</p>
+                        <p data-translation-key="p3:1">一定会写完这个页面</p>
+                        <p data-translation-key="p3:2">一定会成为大佬</p>
+                        <p data-translation-key="p3:3">一定会让代码成为一种语言表达</p>
                     </div>
                     <div class="block blockS"></div>
                 </div>
@@ -542,12 +537,10 @@
             <avatar></avatar>
         </background>
 
-        <p>什么？你想要彩蛋？</p>
-        <i
-            >但是我知道宋体
-            <span data-translation-key="yyds">yyds</span>
-            ~</i
-        >
+        <p data-translation-key="egg-1:1">什么？你想要彩蛋？</p>
+        <i data-translation-key="egg-1:2">但是我知道宋体</i>
+        <span data-translation-key="egg-1:3">yyds</span>
+        <i>~</i>
 
         <!-- <script src="./static/CSSValueReferer.js"></script> -->
         <!-- 该死，这东西花了我两块钱，却做成了石山 -->
@@ -577,91 +570,31 @@
         let hideTimeout = null;
         let currentTarget = null;
 
-        // 智能判断最佳显示位置
+        // 计算tooltip位置
         function calculateBestPosition(target, tipWidth, tipHeight) {
-            const targetRect = target.getBoundingClientRect();
-            const manualPos = target.getAttribute("data-tooltip-position");
+            const rect = target.getBoundingClientRect();
+            const manualPos = target.getAttribute("data-tooltip-position") || "right";
 
-            if (manualPos && ["top", "bottom", "left", "right"].includes(manualPos)) {
-                // 计算位置逻辑
-                let left, top;
-                switch (manualPos) {
-                    case "top":
-                        left = targetRect.left + targetRect.width / 2 - tipWidth / 2;
-                        top = targetRect.top - tipHeight;
-                        break;
-                    case "bottom":
-                        left = targetRect.left + targetRect.width / 2 - tipWidth / 2;
-                        top = targetRect.bottom;
-                        break;
-                    case "left":
-                        left = targetRect.left - tipWidth;
-                        top = targetRect.top + targetRect.height / 2 - tipHeight / 2;
-                        break;
-                    case "right":
-                        left = targetRect.right;
-                        top = targetRect.top + targetRect.height / 2 - tipHeight / 2;
-                        break;
-                }
-                return {
-                    name: manualPos,
-                    left: Math.max(10, Math.min(left, window.innerWidth - tipWidth - 10)),
-                    top: Math.max(10, Math.min(top, window.innerHeight - tipHeight - 10)),
-                };
-            }
-            if (manualPos && ["top", "bottom", "left", "right"].includes(manualPos)) {
-                return {
-                    name: manualPos,
-                    left: targetRect.left + targetRect.width / 2 - tipWidth / 2,
-                    top: targetRect.top + targetRect.height / 2 - tipHeight / 2,
-                };
-            }
-            const viewportWidth = window.innerWidth;
-            const viewportHeight = window.innerHeight;
+            // 默认置于右侧，sidedot于左（朝向元素）
+            let left = rect.right + 10;
+            let top = rect.top + rect.height / 2 - tipHeight / 2;
+            let sideDoDotAt = "left";
 
-            // 可用空间计算
-            const space = {
-                top: targetRect.top,
-                bottom: viewportHeight - targetRect.bottom,
-                left: targetRect.left,
-                right: viewportWidth - targetRect.right,
+            // 如果手动指定左侧或右侧空间不足
+            if (manualPos === "left" || (manualPos === "right" && left + tipWidth > window.innerWidth - 10)) {
+                left = rect.left - tipWidth - 10;
+                sideDoDotAt = "right";
+            }
+
+            // 确保在视口内
+            left = Math.max(10, Math.min(left, window.innerWidth - tipWidth - 10));
+            top = Math.max(10, Math.min(top, window.innerHeight - tipHeight - 10));
+
+            return {
+                left,
+                top,
+                sideDoDotAt,
             };
-
-            // 默认优先顺序: bottom -> top -> right -> left
-            const positions = [
-                {
-                    name: "bottom",
-                    possible: space.bottom >= tipHeight,
-                    left: targetRect.left + targetRect.width / 2 - tipWidth / 2,
-                    top: targetRect.bottom,
-                },
-                {
-                    name: "top",
-                    possible: space.top >= tipHeight,
-                    left: targetRect.left + targetRect.width / 2 - tipWidth / 2,
-                    top: targetRect.top - tipHeight,
-                },
-                {
-                    name: "right",
-                    possible: space.right >= tipWidth,
-                    left: targetRect.right,
-                    top: targetRect.top + targetRect.height / 2 - tipHeight / 2,
-                },
-                {
-                    name: "left",
-                    possible: space.left >= tipWidth,
-                    left: targetRect.left - tipWidth,
-                    top: targetRect.top + targetRect.height / 2 - tipHeight / 2,
-                },
-            ];
-
-            // 找到第一个可行的位置
-            const bestPosition = positions.find((pos) => pos.possible) || positions[0];
-
-            // 调整位置确保不超出视口
-            bestPosition.left = Math.max(10, Math.min(bestPosition.left, viewportWidth - tipWidth - 10));
-            bestPosition.top = Math.max(10, Math.min(bestPosition.top, viewportHeight - tipHeight - 10));
-            console.log(bestPosition);
         }
 
         // 显示 Tooltip
@@ -678,27 +611,29 @@
             tooltip.style.visibility = "hidden";
             tooltip.style.display = "block";
 
-            // 计算最佳位置
+            // 计算位置
             const tipWidth = tooltip.offsetWidth;
             const tipHeight = tooltip.offsetHeight;
-            const bestPosition = calculateBestPosition(target, tipWidth, tipHeight);
+            const pos = calculateBestPosition(target, tipWidth, tipHeight);
 
             // 应用位置
-            tooltip.style.left = `${bestPosition.left}px`;
-            tooltip.style.top = `${bestPosition.top}px`;
-            tooltip.setAttribute("data-tooltip-position", bestPosition.name);
+            tooltip.style.left = `${pos.left}px`;
+            tooltip.style.top = `${pos.top}px`;
+
+            // 设置箭头位置
+            tooltip.style.setProperty("--dot-towards", pos.sideDoDotAt === "left" ? "0%" : "100%");
 
             // 真正显示
             tooltip.style.visibility = "visible";
             currentTarget = target;
         }
 
-        // 隐藏 Tooltip (带延迟)
+        // 定时延迟隐藏 Tooltip
         function hideTooltip() {
             hideTimeout = setTimeout(() => {
                 tooltip.setAttribute("data-show", "false");
                 currentTarget = null;
-            }, 2000);
+            }, 500);
         }
 
         // 取消隐藏

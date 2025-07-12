@@ -1,3 +1,5 @@
+"use strict";
+
 function pseudoUUID() {
     return "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx".replace(/[x]/g, function (c) {
         var r = (Math.random() * 16) | 0,
@@ -137,37 +139,33 @@ function updateUITranslations() {
 }
 
 /**
- * Generating **signal** translation template as a `LanguageFile` Object
+ * According to the document and generates TranslationTemplate of now u displayed
+ * and u can specified the lang is it
  * @param {string[]} languages - Array of language codes to include in the template
  * @returns {Object.<string, Object>} Translation JSON template
  */
-function generateTranslationTemplate(languages = ["[TranslationTemplate]"]) {
+function generateTranslationTemplate(language = "[TranslationTemplate]") {
     const elements = document.querySelectorAll("[data-translation-key]");
-    const translationKeys = new Set();
+    const translationBook = {};
 
     elements.forEach((element) => {
         const key = element.getAttribute("data-translation-key");
         if (key) {
-            translationKeys.add(key);
+            translationBook[key] = element.textContent.trim();
         }
     });
 
     //initialize the template
     const template = {
-        lang: languages[0] || "[TranslationTemplate]",
-        alliance: ["TranslationTemplate"],
+        lang: language,
+        alliance: [language],
         author: `generated from ${document.location.href}`,
         date: new Date().toISOString().split("T")[0],
         version: `generated - ${new Date().toISOString().split("T")[0]}`,
         identifier: pseudoUUID(),
         description: "",
-        translationBook: {},
+        translationBook: translationBook,
     };
-
-    // Add all keys with empty values
-    translationKeys.forEach((key) => {
-        template.translationBook[key] = "";
-    });
 
     return template;
 }
@@ -188,8 +186,16 @@ function downloadTranslationTemplate(fileName, data) {
  * @param {string[]} lang
  */
 function get_TranslationTemplate_From_Loaded(lang = "[TranslationTemplate]") {
+    if (!LanguageFiles[lang]) {
+        // 如果模板不存在，先生成一个
+        LanguageFiles[lang] = generateTranslationTemplate(lang);
+    }
     const template = LanguageFiles[lang];
-    downloadTranslationTemplate(`${lang}_translations.json`, template);
+    if (template) {
+        downloadTranslationTemplate(`${lang}_translations.json`, template);
+    } else {
+        console.error("Failed to generate translation template");
+    }
 }
 
 // Initialize with user's preferred language or default
@@ -201,4 +207,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const langToLoad = supportedLang || (Languages[0] !== "[TranslationTemplate]" ? Languages[0] : Languages[1]);
 
     if (langToLoad) await switchLang(langToLoad);
+
+    // 调试（DOM完全加载后）：生成翻译模板
+    // LanguageFiles["[TranslationTemplate]"] = generateTranslationTemplate();
 });
