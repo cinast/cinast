@@ -10,11 +10,11 @@ always styding something all day around all
 
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃                                                                                                     ┃
-┃                                                                                                     ┃
-┃                                                                                                     ┃
-┃                                                _.--,_                                               ┃
-┃                                            ,’   ,     、                                            ┃
-┃                                           ,   .        、                                           ┃
+┃   Beatyful atom,                                                                                    ┃
+┃   Make those scientists crazied for thousands years.                                                ┃
+┃   It hided all secrets about                   _.--,_                                               ┃
+┃   how is human being                       ,’   ,     、                                            ┃
+┃   and what is the universe.               ,   .        、                                           ┃
 ┃                                          ,   ,         |.                                           ┃
 ┃                                          |  ;          |,                                           ┃
 ┃                                          \  、         ☾                                            ┃
@@ -34,7 +34,8 @@ always styding something all day around all
 ┃                                                                                                     ┃
 ┃ 1em = 14px, w: 1em+ * h: 1em+                                                     𝑖𝑑ℯ 𝙲ℴ𝑠𝑖   0026  ● ┃
 ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-*I didn't know gh's space and line distance is wider than my vsc, these marks are toooo small to see...
+*gh's space and line distance is wider than my vsc, it looks diffently...
+*pic ng.
 ```
 
 ```
