@@ -10,11 +10,11 @@ always styding something all day around all
 
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃                                                                                                     ┃
-┃   Beatyful atom,                                                                                    ┃
-┃   Make those scientists crazied for thousands years.                                                ┃
-┃   It hided all secrets about                   _.--,_                                               ┃
-┃   how is human being                       ,’   ,     、                                            ┃
-┃   and what is the universe.               ,   .        、                                           ┃
+┃                                                                                                     ┃
+┃                                                                                                     ┃
+┃                                                _.--,_                                               ┃
+┃                                            ,’   ,     、                                            ┃
+┃                                           ,   .        、                                           ┃
 ┃                                          ,   ,         |.                                           ┃
 ┃                                          |  ;          |,                                           ┃
 ┃                                          \  、         ☾                                            ┃
