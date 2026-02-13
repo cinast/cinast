@@ -7,6 +7,7 @@ function pseudoUUID() {
         return v.toString(16);
     });
 }
+
 function download(blob, fileName = "") {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
