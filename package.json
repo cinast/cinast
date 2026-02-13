@@ -1,0 +1,30 @@
+{
+  "name": "ide.cosi",
+  "version": "26.2.13-ed2",
+  "description": "and as for this package... a cosi within.",
+  "keywords": [
+    "blog",
+    "cinast",
+    "ide Cosi",
+    "Cosider"
+  ],
+  "homepage": "https://github.com/cinast/cinast#readme",
+  "bugs": {
+    "url": "https://github.com/cinast/cinast/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cinast/cinast.git"
+  },
+  "license": "ISC",
+  "author": "ide Cosi",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "build": "clear && tsc -b"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vue": "^3.5.28"
+  }
+}
